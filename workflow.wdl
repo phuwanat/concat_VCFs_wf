@@ -1,11 +1,11 @@
 version 1.0
 
-workflow merge_VCFs {
+workflow concat_VCFs {
 
     meta {
-        author: "Shloka Negi"
-        email: "shnegi@ucsc.edu"
-        description: "Merge individual sample VCFs to create a unified multi-sample VCF, optionally allowing for modification of sample names."
+        author: "Phuwanat"
+        email: "phuwanat.sak@mahidol.edu"
+        description: "Concat VCFs"
     }
 
     parameter_meta {
