@@ -14,6 +14,7 @@ workflow concat_VCFs {
 
     input {
         Array[File] VCF_FILES
+        String GROUP_NAME = 'samples'
     }
     call run_concating {
         input: vcf_files=VCF_FILES
@@ -26,6 +27,7 @@ workflow concat_VCFs {
 task run_concating {
     input {
         Array[File] vcf_files
+        String group_name = 'samples'
         Int memSizeGB = 8
         Int threadCount = 2
         Int diskSizeGB = 5*round(size(vcf_files, "GB")) + 20
@@ -35,15 +37,15 @@ task run_concating {
 
         cp ~{write_lines(vcf_files)} vcf_list.txt
     
-        bcftools concat -m none -l vcf_list.txt --threads ~{threadCount} -Oz -o ~{group_name}.concated.vcf.gz
+        bcftools concat -f vcf_list.txt --threads ~{threadCount} -Oz -o ~{group_name}.concated.vcf.gz
 
         ## Create index of merged VCF
-        bcftools index -t -o ~{group_name}.merged.vcf.gz.tbi ~{group_name}.concated.vcf.gz
+        bcftools index -t -o ~{group_name}.concated.vcf.gz.tbi ~{group_name}.concated.vcf.gz
     >>>
 
     output {
-        File vcf = "~{group_name}.merged.vcf.gz"
-        File vcf_index = "~{group_name}.merged.vcf.gz.tbi"
+        File vcf = "~{group_name}.concated.vcf.gz"
+        File vcf_index = "~{group_name}.concated.vcf.gz.tbi"
     }
 
     runtime {
