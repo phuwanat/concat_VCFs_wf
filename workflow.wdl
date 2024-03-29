@@ -10,14 +10,16 @@ workflow concat_VCFs {
 
     parameter_meta {
         VCF_FILES: "List of VCFs to merge. Can be gzipped/bgzipped."
+        TABIX_FILES: "List of VCFs to merge. Can be gzipped/bgzipped."
     }
 
     input {
         Array[File] VCF_FILES
+        Array[File] TABIX_FILES
         String GROUP_NAME = 'samples'
     }
     call run_concating {
-        input: vcf_files=VCF_FILES
+        input: vcf_files=VCF_FILES, tabix_files=TABIX_FILES
     }
     output {
         File concated_vcf = run_concating.vcf
@@ -27,6 +29,7 @@ workflow concat_VCFs {
 task run_concating {
     input {
         Array[File] vcf_files
+        Array[File] tabix_files
         String group_name = 'samples'
         Int memSizeGB = 8
         Int threadCount = 2
