@@ -40,7 +40,7 @@ task run_concating {
 
         cp ~{write_lines(vcf_files)} vcf_list.txt
     
-        bcftools concat -f vcf_list.txt --threads ~{threadCount} -Oz -o ~{group_name}.concated.vcf.gz
+        bcftools concat -a -f vcf_list.txt --threads ~{threadCount} -Oz -o ~{group_name}.concated.vcf.gz
 
         ## Create index of merged VCF
         bcftools index -t -o ~{group_name}.concated.vcf.gz.tbi ~{group_name}.concated.vcf.gz
