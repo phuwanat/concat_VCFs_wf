@@ -39,6 +39,14 @@ task run_concating {
         set -eux -o pipefail
 
         cp ~{write_lines(vcf_files)} vcf_list.txt
+        cp ~{write_lines(tabix_files)} tbi_list.txt
+        i=1
+        for vcf in $(cat vcf_list.txt); do
+            tbi=$(awk "NR==$i" tbi_list.txt)      # Get the corresponding TBI from tbi_list
+        #    echo "mv ${tbi} ${vcf}.tbi"          # Just echo the command for now
+            mv "${tbi}" "${vcf}.tbi"
+            i=$((i + 1))                         # Properly increment i
+        done
     
         bcftools concat -a -f vcf_list.txt --threads ~{threadCount} -Oz -o ~{group_name}.concated.vcf.gz
 
